@@ -39,9 +39,9 @@ class Train():
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=1e-4, weight_decay=1e-5)
     def dataset_intialiser(self):
         train_ds = CustomDataset(self.args,is_train=True)
-        self.train_loader = DataLoader(train_ds, self.args.batch_size, shuffle=True, num_workers=os.cpu_count(), pin_memory=False)
+        self.train_loader = DataLoader(train_ds, batch_size = self.args.batch_size, shuffle=True, num_workers=os.cpu_count(), pin_memory=False)
         val_ds = CustomDataset(self.args,is_train=False)
-        self.val_loader = DataLoader(val_ds, self.args.batch_size, shuffle=False, num_workers=os.cpu_count(), pin_memory=False)
+        self.val_loader = DataLoader(val_ds, batch_size = self.args.batch_size, shuffle=False, num_workers=os.cpu_count(), pin_memory=False)
     def validation(self,epoch_iterator_val):
         self.model.eval()
         dice_vals = list()
