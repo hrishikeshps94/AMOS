@@ -7,7 +7,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 torch.backends.cudnn.benchmark = True
 from monai.metrics import DiceMetric
 from monai.losses import DiceCELoss
-from dataset import CustomDataset
+# from dataset import CustomDataset
+from dataset import DatasetGen
 from monai.data import DataLoader,decollate_batch
 from monai.inferers import sliding_window_inference
 from monai.transforms import AsDiscrete
@@ -38,9 +39,10 @@ class Train():
         self.loss_function = DiceCELoss(to_onehot_y=True, softmax=True)
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=1e-4, weight_decay=1e-5)
     def dataset_intialiser(self):
-        train_ds = CustomDataset(self.args,is_train=True)
+        # train_ds = CustomDataset(self.args,is_train=True)
+        train_ds,val_ds = DatasetGen(self.args)
         self.train_loader = DataLoader(train_ds, batch_size = self.args.batch_size, shuffle=True, num_workers=os.cpu_count(), pin_memory=False)
-        val_ds = CustomDataset(self.args,is_train=False)
+        # val_ds = CustomDataset(self.args,is_train=False)
         self.val_loader = DataLoader(val_ds, batch_size = self.args.batch_size, shuffle=False, num_workers=os.cpu_count(), pin_memory=False)
     def validation(self,epoch_iterator_val):
         self.model.eval()
